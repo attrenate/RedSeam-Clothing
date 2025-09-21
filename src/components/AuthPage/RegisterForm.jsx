@@ -4,14 +4,29 @@ const RegisterForm = ({ toggleForm }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    const newUser = { name, email, password };
-    console.log("Registering:", newUser);
+    try {
+      const response = await fetch("https://api.redberry.store/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    // TODO: connect with API (POST /register)
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Registration successful! Please login.");
+        toggleForm(); 
+      } else {
+        setMessage(data.message || "Registration failed");
+      }
+    } catch (error) {
+      setMessage("Network error");
+    }
   };
 
   return (
@@ -42,7 +57,9 @@ const RegisterForm = ({ toggleForm }) => {
         required
       />
 
-      <button type="submit">Register</button>
+      {message && <p>{message}</p>}
+
+      <button type="submit" className="reg-btn">Register</button>
 
       <p>
         Already have an account?{" "}

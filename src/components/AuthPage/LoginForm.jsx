@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-//import "./LoginForm.css";
+import "./LoginForm.css";
 
 const LoginForm = ({ toggleForm }) => {
   const [email, setEmail] = useState("");
@@ -10,7 +10,7 @@ const LoginForm = ({ toggleForm }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("", {
+      const response = await fetch("https://api.redberry.store/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -20,7 +20,6 @@ const LoginForm = ({ toggleForm }) => {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        
         window.location.reload(); 
       } else {
         setErrorMessage(data.message || "Login failed");
@@ -32,28 +31,31 @@ const LoginForm = ({ toggleForm }) => {
 
   return (
     <div className="login-form">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {errorMessage && <p className="error">{errorMessage}</p>}
-        <button type="submit">Login</button>
-      </form>
-      <p className="toggle-link">
-        Don't have an account? <span onClick={toggleForm}>Register</span>
-      </p>
+      <div className="login-form-content">
+        <h2 className="login-title">Log In</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="login-input"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="login-input"
+            required
+          />
+          {errorMessage && <p className="error">{errorMessage}</p>}
+          <button type="submit" className="login-button">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
