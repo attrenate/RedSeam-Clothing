@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginForm.css";
+import { registeredUsers } from "./registeredUsers";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -9,27 +10,30 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("https://api.redberry.store/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        window.location.reload();
-      } else {
-        setMessage(data.message || "Login failed");
-      }
-    } catch (error) {
-      setMessage("Network error");
+    if (email.length < 3 || password.length < 3) {
+      setMessage("Email and password must be at least 3 characters.");
+      return;
     }
+
+    if (!email.endsWith("@gmail.com")) {
+      setMessage("Please enter a valid Gmail address.");
+      return;
+    }
+
+    const user = registeredUsers.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (!user) {
+      setMessage("Incorrect Gmail or password, or user is not registered.");
+      return;
+    }
+
+    setMessage("Login successful!");
+    navigate("/products");
   };
 
   return (
@@ -78,3 +82,7 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+
+
+

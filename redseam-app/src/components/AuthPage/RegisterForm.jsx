@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginForm.css";
+import { registeredUsers } from "./registeredUsers";
 
 const RegisterForm = () => {
   const [name, setName] = useState("");
@@ -14,32 +15,37 @@ const RegisterForm = () => {
 
   const profilePic = "/pfp.jpg";
 
-  const handleRegister = async (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
+
+    // Check for valid Gmail
+    if (!email.endsWith("@gmail.com")) {
+      setMessage("Please enter a valid Gmail address.");
+      return;
+    }
 
     if (password !== confirm) {
       setMessage("Passwords do not match");
       return;
     }
 
-    try {
-      const response = await fetch("https://api.redberry.store/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("Registration successful! Please login.");
-        navigate("/"); // Redirect to login page
-      } else {
-        setMessage(data.message || "Registration failed");
-      }
-    } catch (error) {
-      setMessage("Network error");
+    // Check if user already exists
+    const existingUser = registeredUsers.find((u) => u.email === email);
+    if (existingUser) {
+      setMessage("User already registered with this Gmail.");
+      return;
     }
+
+    // Check for minimum length
+    if (name.length < 3 || email.length < 3 || password.length < 3) {
+      setMessage("Username, email, and password must be at least 3 characters.");
+      return;
+    }
+
+    // Register user
+    registeredUsers.push({ name, email, password });
+    setMessage("Registration successful! Please login.");
+    navigate("/"); // Redirect to login page
   };
 
   return (
