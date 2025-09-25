@@ -5,6 +5,7 @@ import LoginForm from "./components/AuthPage/LoginForm";
 import RegisterForm from "./components/AuthPage/RegisterForm";
 import Products from "./components/Products/Products";
 import "./components/AuthPage/AuthPage.css";
+import CartPage from "./components/Products/CartPage";
 
 const AuthLayout = ({ children }) => (
   <div className="auth-page">
@@ -34,6 +35,7 @@ function App() {
           }
         />
         <Route path="/products" element={<Products />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </Router>
   );
