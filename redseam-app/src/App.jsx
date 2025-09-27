@@ -5,7 +5,7 @@ import LoginForm from "./components/AuthPage/LoginForm";
 import RegisterForm from "./components/AuthPage/RegisterForm";
 import Products from "./components/Products/Products";
 import CartPage from "./components/Products/CartPage";
-import ProductDetailPage from "./components/Products/ProductDetailPage";
+import { CartProvider } from "./components/Products/CartContext";
 import "./components/AuthPage/AuthPage.css";
 
 const AuthLayout = ({ children }) => (
@@ -17,29 +17,30 @@ const AuthLayout = ({ children }) => (
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <AuthLayout>
-              <LoginForm />
-            </AuthLayout>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <AuthLayout>
-              <RegisterForm />
-            </AuthLayout>
-          }
-        />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetailPage />} />
-        <Route path="/cart" element={<CartPage />} />
-      </Routes>
-    </Router>
+    <CartProvider>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <AuthLayout>
+                <LoginForm />
+              </AuthLayout>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <AuthLayout>
+                <RegisterForm />
+              </AuthLayout>
+            }
+          />
+          <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<CartPage />} />
+        </Routes>
+      </Router>
+    </CartProvider>
   );
 }
 
