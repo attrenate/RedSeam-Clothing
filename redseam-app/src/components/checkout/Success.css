@@ -1,0 +1,38 @@
+.success-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
+  width: 100vw; 
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.success-title {
+  font-size: 42px;
+  width: 233px;
+  height: 63px;
+  font-weight: 600;
+}
+
+.success-message {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.continue-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #ff4000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
+
+.continue-btn:hover {
+  background-color: #e03e00;
+}

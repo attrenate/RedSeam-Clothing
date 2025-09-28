@@ -8,6 +8,8 @@ import CartPage from "./components/Products/CartPage";
 import { CartProvider } from "./components/Products/CartContext";
 import "./components/AuthPage/AuthPage.css";
 import ProductDetailPage from "./components/Products/ProductDetailPage";
+import CheckoutPage from "./components/Checkout/CheckoutPage";
+import Success from "./components/checkout/Success"
 
 
 const AuthLayout = ({ children }) => (
@@ -41,6 +43,9 @@ function App() {
   <Route path="/products" element={<Products />} />
   <Route path="/products/:id" element={<ProductDetailPage />} />
   <Route path="/cart" element={<CartPage />} />
+  <Route path="/checkout" element={<CheckoutPage />} />
+  <Route path="/success" element={<Success />} />
+
 </Routes>
 
       </Router>

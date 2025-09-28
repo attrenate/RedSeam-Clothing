@@ -76,24 +76,30 @@ const Products = () => {
   return (
     <div className="products-page">
       {/* Top Navigation */}
-      <div className="top-nav">
-        <div className="logo">
-          <div className="logo-child">
-            <img src="/Vector.png" alt="Redseam Logo" className="logo-icon" />
-          </div>
-          <h1 className="logo-text">Redseam Clothing</h1>
-        </div>
-
-        <div className="nav-icons">
-          <img
-            src="/cart.png"
-            alt="Cart"
-            className="cart-icon"
-            onClick={toggleCart}
-          />
-          <img src="/pfp.jpg" alt="Profile" className="profile-pic" />
-        </div>
+      
+<div className="top-nav">
+  <div className="nav-left">
+    <div className="logo">
+      <div className="logo-child">
+        <img src="/Vector.png" alt="Redseam Logo" className="logo-icon" />
       </div>
+      <h1 className="logo-text">Redseam Clothing</h1>
+    </div>
+  </div>
+
+  <div className="nav-right">
+    <div className="nav-icons">
+      <img
+        src="/cart.png"
+        alt="Cart"
+        className="cart-icon"
+        onClick={toggleCart}
+      />
+      <img src="/pfp.jpg" alt="Profile" className="profile-pic" />
+    </div>
+  </div>
+</div>
+
 
       {/* Cart Dropdown */}
       {cartOpen && (
