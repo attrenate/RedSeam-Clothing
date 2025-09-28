@@ -1,40 +1,37 @@
 import React, { createContext, useContext, useState } from "react";
 
-// make a context
 const CartContext = createContext();
-
-// hook to use cart
 export const useCart = () => useContext(CartContext);
 
-// provider
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const addToCart = (product, color = null, size = null) => {
+  setCart((prev) => {
+    const existingItem = prev.find(
+      (item) =>
+        item.id === product.id &&
+        item.color === color &&
+        item.size === size
+    );
 
-  // add to cart
-  const addToCart = (product, color, size) => {
-    setCart((prev) => {
-      const existing = prev.find(
-        (item) =>
-          item.id === product.id &&
-          item.color === color &&
-          item.size === size
+    if (existingItem) {
+      return prev.map((item) =>
+        item.id === product.id &&
+        item.color === color &&
+        item.size === size
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       );
-
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id &&
-          item.color === color &&
-          item.size === size
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-
+    } else {
       return [...prev, { ...product, color, size, quantity: 1 }];
-    });
-  };
+    }
+  });
+};
 
-  // remove
+ 
+
+
+
   const removeFromCart = (id, color, size) => {
     setCart((prev) =>
       prev.filter(
@@ -44,7 +41,6 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // update qty
   const updateQuantity = (id, color, size, qty) => {
     setCart((prev) =>
       prev.map((item) =>
@@ -55,12 +51,11 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // total
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, total }}
+      value={{ cart, addToCart, removeFromCart, updateQuantity, total, setCart }}
     >
       {children}
     </CartContext.Provider>

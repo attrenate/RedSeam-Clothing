@@ -13,7 +13,7 @@ const Products = () => {
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [sortOption, setSortOption] = useState("");
+  const [sortOption, setSortOption] = useState("newest");
 
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -46,11 +46,16 @@ const Products = () => {
       );
     }
 
-    // Sort by price
+    // Sorting
     if (sortOption === "price-asc") {
       updatedProducts.sort((a, b) => a.price - b.price);
     } else if (sortOption === "price-desc") {
       updatedProducts.sort((a, b) => b.price - a.price);
+    } else if (sortOption === "newest") {
+      updatedProducts.sort(
+        (a, b) =>
+          new Date(b.created_at || b.id) - new Date(a.created_at || a.id)
+      );
     }
 
     setFilteredProducts(updatedProducts);
@@ -71,7 +76,7 @@ const Products = () => {
       {/* Products Header */}
       <div className="products-header">
         <h2 className="products-title">Products</h2>
-        <span className="products-info">Showing 1-10 of 100 results</span>
+        <span className="products-info">Showing {filteredProducts.length} results</span>
         <div className="products-actions">
           {/* Filter Dropdown */}
           <div className="dropdown">
@@ -129,11 +134,19 @@ const Products = () => {
               <div className="dropdown-content">
                 <button
                   onClick={() => {
+                    setSortOption("newest");
+                    setSortOpen(false);
+                  }}
+                >
+                  Newest
+                </button>
+                <button
+                  onClick={() => {
                     setSortOption("price-asc");
                     setSortOpen(false);
                   }}
                 >
-                  Lowest Price
+                  Price: Low to High
                 </button>
                 <button
                   onClick={() => {
@@ -141,7 +154,7 @@ const Products = () => {
                     setSortOpen(false);
                   }}
                 >
-                  Highest Price
+                  Price: High to Low
                 </button>
               </div>
             )}

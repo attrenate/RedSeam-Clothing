@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "./CartContext";
+//import "./ProductDetailPage.css";
 
 const API_BASE = "https://api.redseam.redberryinternship.ge/api";
 
@@ -18,7 +19,8 @@ const ProductDetailPage = () => {
           headers: { Accept: "application/json" },
         });
         const data = await res.json();
-        setProduct(data);
+
+        if (data) setProduct(data.data || data); // Ensure correct structure
       } catch (err) {
         console.error("Failed to fetch product details", err);
       }
