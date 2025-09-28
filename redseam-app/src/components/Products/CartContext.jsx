@@ -5,7 +5,7 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const addToCart = (product, color = null, size = null) => {
+ const addToCart = (product, color, size, quantity) => {
   setCart((prev) => {
     const existingItem = prev.find(
       (item) =>
@@ -15,18 +15,21 @@ export const CartProvider = ({ children }) => {
     );
 
     if (existingItem) {
+      // Update quantity if item already exists
       return prev.map((item) =>
         item.id === product.id &&
         item.color === color &&
         item.size === size
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, quantity: item.quantity + Number(quantity) }
           : item
       );
     } else {
-      return [...prev, { ...product, color, size, quantity: 1 }];
+      // Add new item with correct quantity
+      return [...prev, { ...product, color, size, quantity: Number(quantity) }];
     }
   });
 };
+
 
  
 

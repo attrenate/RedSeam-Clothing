@@ -16,10 +16,9 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOption, setSortOption] = useState("newest");
 
-  const [filteredProducts, setFilteredProducts] = useState([]);
-
   const [cartOpen, setCartOpen] = useState(false);
-  const { cart } = useCart();
+
+  const { cart, removeFromCart } = useCart();
 
   const navigate = useNavigate();
 
@@ -41,6 +40,8 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     let updatedProducts = [...products];
@@ -67,7 +68,7 @@ const Products = () => {
 
   if (loading) return <p>Loading products...</p>;
 
-  const toggleCart = () => setCartOpen(!cartOpen);
+  const toggleCart = () => setCartOpen((prev) => !prev);
 
   const subtotal = cart.reduce((acc, i) => acc + i.price * i.quantity, 0);
   const deliveryFee = subtotal * 0.1;
@@ -104,10 +105,23 @@ const Products = () => {
             <div className="cart-items">
               {cart.map((item, index) => (
                 <div key={index} className="cart-item">
-                  <img src={item.cover_image || item.image} alt={item.name} />
+                  <img
+                    src={item.cover_image || item.image}
+                    alt={item.name}
+                    className="cart-item-img"
+                  />
                   <div>
                     <p>{item.name}</p>
                     <p>${item.price}</p>
+                    <p>Qty: {item.quantity}</p>
+                    <button
+                      className="remove-btn"
+                      onClick={() =>
+                        removeFromCart(item.id, item.color, item.size)
+                      }
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               ))}
