@@ -11,6 +11,8 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [mainImage, setMainImage] = useState("");
+  const [quantity, setQuantity] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -19,8 +21,15 @@ const ProductDetailPage = () => {
           headers: { Accept: "application/json" },
         });
         const data = await res.json();
-
-        if (data) setProduct(data.data || data); // Ensure correct structure
+        if (data) {
+          setProduct(data.data || data);
+          setMainImage(
+            data.data?.cover_image ||
+              data.data?.image ||
+              data.data?.images?.[0] ||
+              ""
+          );
+        }
       } catch (err) {
         console.error("Failed to fetch product details", err);
       }
@@ -31,69 +40,124 @@ const ProductDetailPage = () => {
 
   if (!product) return <p>Loading...</p>;
 
+  const sizes = ["XS", "S", "M", "L", "XL"];
+
   return (
     <div className="product-detail">
-  {/* Logo Section */}
-  <div className="logo-section">
-    <div className="logo-child">
-      <img src="/Vector.png" alt="Redseam Logo" className="logo-icon" />
-    </div>
-    <h1 className="logo-text">Redseam Clothing</h1>
-  </div>
+      {/* Logo and breadcrumb */}
+      <div className="logo-section">
+        <div className="logo-child">
+          <img src="/Vector.png" alt="Redseam Logo" className="logo-icon" />
+        </div>
+        <h1 className="logo-text">Redseam Clothing</h1>
+      </div>
+      <p className="breadcrumb">Listing / Product</p>
 
-  <p className="breadcrumb">Listing / Product</p>
-
-  <div className="product-main">
-    {/* Thumbnails */}
-    <div className="product-thumbnails">
-      {product.images?.slice(0, 5).map((img, index) => (
-        <img key={index} src={img} alt={`Thumbnail ${index}`} className="thumbnail-img" />
-      ))}
-    </div>
-
-    {/* Main Product Section */}
-    <div className="main-product">
-      <img
-        src={product.cover_image || product.image}
-        alt={product.name}
-        className="main-image"
-      />
-
-      {/* Product Info */}
-      <div className="product-info">
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>${product.price}</p>
-
-        <div className="selector-group">
-          <label>Size:</label>
-          <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-            <option value="">Choose Size</option>
-            {product.sizes?.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-
-          <label>Color:</label>
-          <select value={selectedColor} onChange={(e) => setSelectedColor(e.target.value)}>
-            <option value="">Choose Color</option>
-            {product.colors?.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+      {/* Main product section */}
+      <div className="product-main">
+        {/* Thumbnails */}
+        <div className="product-thumbnails">
+          {product.images?.slice(0, 5).map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt={`${product.name} ${index}`}
+              className="thumbnail-img"
+              onClick={() => setMainImage(img)}
+            />
+          ))}
         </div>
 
-        <button
-          className="add-to-cart-btn"
-          disabled={!selectedSize || !selectedColor}
-          onClick={() => addToCart(product, selectedColor, selectedSize)}
-        >
-          Add to Cart
-        </button>
-      </div>
-    </div>
+        {/* Main image & details */}
+        <div className="main-product">
+          <img
+  src={product.cover_image || product.image || "/fallback-image.jpg"}
+  alt={product.name || "Product Image"}
+  className="detail-img"
+/>
+
+
+          {/* Product info */}
+          <div className="product-info">
+            <h2>{product.name}</h2>
+            <p className="product-price">${product.price}</p>
+
+            {/* Color selection */}
+            
+
+            <div className="color-selector">
+  <p>Color: {selectedColor || "Choose"}</p>
+  <div className="color-options">
+    {(product.colors?.length ? product.colors : ["#FF0000", "#00FF00", "#0000FF"]).slice(0, 3).map((color, index) => (
+      <button
+        key={index}
+        className={`color-btn ${selectedColor === color ? "selected" : ""}`}
+        style={{
+          backgroundColor: color,
+          width: "38px",
+          height: "38px",
+          borderRadius: "50%",
+          border: "1px solid #ccc",
+        }}
+        onClick={() => setSelectedColor(color)}
+      ></button>
+    ))}
   </div>
 </div>
+
+
+            {/* Size selection */}
+            <div className="size-selector">
+              <p>Size: {selectedSize || "Choose"}</p>
+              <div className="size-options">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    className={`size-btn ${
+                      selectedSize === size ? "selected" : ""
+                    }`}
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quantity selection */}
+            <div className="quantity-selector">
+              <label>
+                Quantity:
+                <input
+                  type="number"
+                  placeholder="Enter quantity"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  min="1"
+                />
+              </label>
+            </div>
+
+            {/* Add to Cart button */}
+            <button
+              className="add-to-cart-btn"
+              disabled={!selectedSize || !selectedColor || !quantity}
+              onClick={() =>
+                addToCart(product, selectedColor, selectedSize, quantity)
+              }
+            >
+              Add to Cart
+            </button>
+
+            {/* Details section */}
+            <div className="product-details">
+              <h3>Details</h3>
+              <p>{product.description}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
