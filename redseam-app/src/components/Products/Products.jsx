@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Products.css";
+import { useCart } from "./CartContext";
 
 const API_BASE = "https://api.redseam.redberryinternship.ge/api";
 
@@ -16,6 +17,11 @@ const Products = () => {
   const [sortOption, setSortOption] = useState("newest");
 
   const [filteredProducts, setFilteredProducts] = useState([]);
+
+  const [cartOpen, setCartOpen] = useState(false);
+  const { cart } = useCart();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -39,14 +45,12 @@ const Products = () => {
   useEffect(() => {
     let updatedProducts = [...products];
 
-    // Filter by price range
     if (minPrice && maxPrice) {
       updatedProducts = updatedProducts.filter(
         (product) => product.price >= minPrice && product.price <= maxPrice
       );
     }
 
-    // Sorting
     if (sortOption === "price-asc") {
       updatedProducts.sort((a, b) => a.price - b.price);
     } else if (sortOption === "price-desc") {
@@ -63,22 +67,75 @@ const Products = () => {
 
   if (loading) return <p>Loading products...</p>;
 
+  const toggleCart = () => setCartOpen(!cartOpen);
+
+  const subtotal = cart.reduce((acc, i) => acc + i.price * i.quantity, 0);
+  const deliveryFee = subtotal * 0.1;
+
   return (
     <div className="products-page">
-      {/* Logo Section */}
-      <div className="logo">
-        <div className="logo-child">
-          <img src="/Vector.png" alt="Redseam Logo" className="logo-icon" />
+      {/* Top Navigation */}
+      <div className="top-nav">
+        <div className="logo">
+          <div className="logo-child">
+            <img src="/Vector.png" alt="Redseam Logo" className="logo-icon" />
+          </div>
+          <h1 className="logo-text">Redseam Clothing</h1>
         </div>
-        <h1 className="logo-text">Redseam Clothing</h1>
+
+        <div className="nav-icons">
+          <img
+            src="/cart.png"
+            alt="Cart"
+            className="cart-icon"
+            onClick={toggleCart}
+          />
+          <img src="/pfp.jpg" alt="Profile" className="profile-pic" />
+        </div>
       </div>
+
+      {/* Cart Dropdown */}
+      {cartOpen && (
+        <div className="cart-dropdown">
+          <h2>Your Cart</h2>
+          {cart.length === 0 ? (
+            <p className="empty-msg">Your cart is empty</p>
+          ) : (
+            <div className="cart-items">
+              {cart.map((item, index) => (
+                <div key={index} className="cart-item">
+                  <img src={item.cover_image || item.image} alt={item.name} />
+                  <div>
+                    <p>{item.name}</p>
+                    <p>${item.price}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="cart-summary">
+            <p>Subtotal: ${subtotal.toFixed(2)}</p>
+            <p>Delivery: ${deliveryFee.toFixed(2)}</p>
+          </div>
+
+          <button
+            className="checkout-btn"
+            onClick={() => navigate("/checkout")}
+          >
+            Go to Checkout
+          </button>
+        </div>
+      )}
 
       {/* Products Header */}
       <div className="products-header">
         <h2 className="products-title">Products</h2>
-        <span className="products-info">Showing {filteredProducts.length} results</span>
+        <span className="products-info">
+          Showing {filteredProducts.length} results
+        </span>
         <div className="products-actions">
-          {/* Filter Dropdown */}
+          {/* Filter */}
           <div className="dropdown">
             <button
               className="products-btn"
@@ -119,7 +176,7 @@ const Products = () => {
             )}
           </div>
 
-          {/* Sort Dropdown */}
+          {/* Sort */}
           <div className="dropdown">
             <button
               className="products-btn"

@@ -145,3 +145,104 @@
   gap: 20px;
   margin-top: 20px;
 }
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+/* Dropdown Cart */
+.cart-dropdown {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.cart-dropdown h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.empty-msg {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #777;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.cart-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 8px;
+}
+
+.cart-summary {
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.checkout-btn {
+  width: 100%;
+  height: 50px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.checkout-btn:hover {
+  opacity: 0.9;
+}
